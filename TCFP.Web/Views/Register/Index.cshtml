@@ -1,0 +1,42 @@
+﻿@model TCFP.Web.Models.RegisterAccount
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    @Html.AntiForgeryToken()
+    <div class="table">
+        <div class="row">
+            <h4>Register a new account before using our service.</h4>
+            <br />
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @if (@ViewBag.Message != null)
+            {
+                <div class="validation-summary-errors text-info" data-valmsg-summary="true">
+                    <ul>
+                        <li>@ViewBag.Message</li>
+                    </ul>
+                </div>
+            }
+            <div class="row">
+                @Html.LabelFor(m => m.Email, new { @class = "col-3" })
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-5" })
+            </div>
+            <br />
+            <div class="row">
+                @Html.LabelFor(m => m.Name, new { @class = "col-3" })
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control col-5", @maxLength = "200" })
+            </div>
+            <br />
+            <div class="row">
+                <div class="g-recaptcha" data-sitekey="6LftsDAUAAAAADK53CWDS-hpvKuJdJPCAvnu61em"></div>
+            </div>
+            <br />
+            <button name="button" value="Submit" class=" col-1" type="submit">Submit</button>
+        </div>
+
+    </div>
+}
