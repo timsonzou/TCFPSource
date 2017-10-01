@@ -33,9 +33,9 @@ namespace TCFP.Data
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<ClientProfile> ClientProfiles { get; set; }
         public virtual DbSet<SystemParameter> SystemParameters { get; set; }
         public virtual DbSet<ClientToken> ClientTokens { get; set; }
+        public virtual DbSet<ClientProfile> ClientProfiles { get; set; }
     
         public virtual int sp_RegisterNewClient(string email, string name, string tokenID)
         {
@@ -52,6 +52,28 @@ namespace TCFP.Data
                 new ObjectParameter("tokenID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_RegisterNewClient", emailParameter, nameParameter, tokenIDParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetUserToken_Result> sp_GetUserToken(string tokenID)
+        {
+            var tokenIDParameter = tokenID != null ?
+                new ObjectParameter("tokenID", tokenID) :
+                new ObjectParameter("tokenID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUserToken_Result>("sp_GetUserToken", tokenIDParameter);
+        }
+    
+        public virtual int sp_ResetPassword(string tokenID, string password)
+        {
+            var tokenIDParameter = tokenID != null ?
+                new ObjectParameter("tokenID", tokenID) :
+                new ObjectParameter("tokenID", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("password", password) :
+                new ObjectParameter("password", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ResetPassword", tokenIDParameter, passwordParameter);
         }
     }
 }

@@ -10,15 +10,14 @@
 namespace TCFP.Data
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class ClientProfile
+    public partial class sp_GetUserToken_Result
     {
+        public string TokenID { get; set; }
         public string Email { get; set; }
-        public string Name { get; set; }
-        public byte[] Password { get; set; }
-        public string Status { get; set; }
+        public string Type { get; set; }
         public System.DateTime CreatedOn { get; set; }
-        public System.DateTime UpdatedOn { get; set; }
+        public System.DateTime ExpiredOn { get; set; }
+        public Nullable<System.DateTime> UsedOn { get; set; }
     }
 }

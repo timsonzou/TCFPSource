@@ -11,7 +11,7 @@
           </Key>
           <Property Name="Email" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Password" Type="varbinary(max)" Nullable="false" />
           <Property Name="Status" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
@@ -36,10 +36,17 @@
           <Property Name="ParameterValue" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="DataType" Type="nchar" MaxLength="1" Nullable="false" />
         </EntityType>
+        <Function Name="sp_GetUserToken" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="tokenID" Type="nchar" Mode="In" />
+        </Function>
         <Function Name="sp_RegisterNewClient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="email" Type="nvarchar" Mode="In" />
           <Parameter Name="name" Type="nvarchar" Mode="In" />
           <Parameter Name="tokenID" Type="nchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ResetPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="tokenID" Type="nchar" Mode="In" />
+          <Parameter Name="password" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="TCFPModelStoreContainer">
           <EntitySet Name="ClientProfile" EntityType="Self.ClientProfile" Schema="dbo" store:Type="Tables" />
@@ -50,19 +57,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TCFPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="ClientProfile">
-          <Key>
-            <PropertyRef Name="Email" />
-          </Key>
-          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
-        </EntityType>
         <EntityContainer Name="TCFPEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="ClientProfiles" EntityType="Self.ClientProfile" />
           <EntitySet Name="SystemParameters" EntityType="TCFPModel.SystemParameter" />
           <FunctionImport Name="sp_RegisterNewClient">
             <Parameter Name="email" Mode="In" Type="String" />
@@ -70,6 +65,14 @@
             <Parameter Name="tokenID" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="ClientTokens" EntityType="TCFPModel.ClientToken" />
+          <FunctionImport Name="sp_GetUserToken" ReturnType="Collection(TCFPModel.sp_GetUserToken_Result)">
+          <Parameter Name="tokenID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ResetPassword">
+            <Parameter Name="tokenID" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="ClientProfiles" EntityType="TCFPModel.ClientProfile" />
         </EntityContainer>
         <EntityType Name="SystemParameter">
           <Key>
@@ -91,24 +94,31 @@
           <Property Name="ExpiredOn" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UsedOn" Type="DateTime" Precision="3" />
         </EntityType>
+        <ComplexType Name="sp_GetUserToken_Result">
+          <Property Type="String" Name="TokenID" Nullable="false" MaxLength="36" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="1" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="ExpiredOn" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="UsedOn" Nullable="true" Precision="23" />
+        </ComplexType>
+        <EntityType Name="ClientProfile">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TCFPModelStoreContainer" CdmEntityContainer="TCFPEntities">
-          <EntitySetMapping Name="ClientProfiles">
-            <EntityTypeMapping TypeName="TCFPModel.ClientProfile">
-              <MappingFragment StoreEntitySet="ClientProfile">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SystemParameters">
             <EntityTypeMapping TypeName="TCFPModel.SystemParameter">
               <MappingFragment StoreEntitySet="SystemParameter">
@@ -129,6 +139,31 @@
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="TokenID" ColumnName="TokenID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetUserToken" FunctionName="TCFPModel.Store.sp_GetUserToken">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TCFPModel.sp_GetUserToken_Result">
+                <ScalarProperty Name="TokenID" ColumnName="TokenID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ExpiredOn" ColumnName="ExpiredOn" />
+                <ScalarProperty Name="UsedOn" ColumnName="UsedOn" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_ResetPassword" FunctionName="TCFPModel.Store.sp_ResetPassword" />
+          <EntitySetMapping Name="ClientProfiles">
+            <EntityTypeMapping TypeName="TCFPModel.ClientProfile">
+              <MappingFragment StoreEntitySet="ClientProfile">
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

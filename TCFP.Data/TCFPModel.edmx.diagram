@@ -5,9 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="791c7c6a2e5c4aa8bd3a9753ca6348de" Name="Diagram1">
-        <EntityTypeShape EntityType="TCFPModel.ClientProfile" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TCFPModel.SystemParameter" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="TCFPModel.ClientToken" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="TCFPModel.ClientProfile" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

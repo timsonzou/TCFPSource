@@ -18,6 +18,8 @@ namespace TCFP.Web.Controllers
     [AllowAnonymous]
     public class RegisterController : Controller
     {
+        private const string TokenIDKey = "TokenID";
+
         // GET: Register
         [HttpGet]
         public ActionResult Index()
@@ -128,6 +130,78 @@ namespace TCFP.Web.Controllers
             public string hostname;
             [JsonProperty(PropertyName = "error-codes")]
             public string[] error_codes;
+        }
+
+        [HttpGet]
+        public ActionResult ResetPassword()
+        {
+            string tokenID = Request.QueryString["t"];
+            if (string.IsNullOrEmpty(tokenID))
+            {
+                ModelState.AddModelError("E0008", Resources.Message.E0008);
+                return View();
+            }
+            else
+            {
+                using (var context = new Data.TCFPEntities())
+                {
+                    var tokens = context.sp_GetUserToken(tokenID).ToList();
+                    if (tokens.Count != 1)
+                    {
+                        ModelState.AddModelError("E0008", Resources.Message.E0008);
+                        return View();
+                    }
+                    else
+                    {
+                        var token = tokens.SingleOrDefault();
+                        if (token.ExpiredOn<=DateTime.Now || token.UsedOn.HasValue)
+                        {
+                            ModelState.AddModelError("E0009", Resources.Message.E0009);
+                            return View();
+                        }
+                        else
+                        {
+                            TempData[TokenIDKey] = token.TokenID;
+                            return View();
+                        }
+                    }
+                }
+            }
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(Models.NewPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    using (var conn = new EntityConnection(ConfigurationManager.ConnectionStrings["TCFPEntities"].ConnectionString))
+                    {
+                        await conn.OpenAsync();
+
+                        using (var context = new TCFPEntities(conn, false))
+                        {
+                            int affectedRecord = context.sp_ResetPassword(TempData[TokenIDKey].ToString(), model.Password);
+
+                            if (affectedRecord == 0)
+                            {
+                                ModelState.AddModelError("E0009", Resources.Message.E0009);
+                            }
+                            else
+                            {
+                                ViewBag.Message = Resources.Message.I0002;
+                            }
+                        }
+                    }
+
+                    scope.Complete();
+                }
+
+                return View();
+            }
+            else
+                return View();
         }
     }
 }

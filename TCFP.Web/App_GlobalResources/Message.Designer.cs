@@ -97,11 +97,65 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} should be 8-16 characters..
+        /// </summary>
+        internal static string E0005 {
+            get {
+                return ResourceManager.GetString("E0005", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password should contain alpha and numeric characters..
+        /// </summary>
+        internal static string E0006 {
+            get {
+                return ResourceManager.GetString("E0006", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password not match..
+        /// </summary>
+        internal static string E0007 {
+            get {
+                return ResourceManager.GetString("E0007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Request. Please check the full URL in the email..
+        /// </summary>
+        internal static string E0008 {
+            get {
+                return ResourceManager.GetString("E0008", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL is expired..
+        /// </summary>
+        internal static string E0009 {
+            get {
+                return ResourceManager.GetString("E0009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An verification email has been send to your email account. Please use the link in the email to activate your account..
         /// </summary>
         internal static string I0001 {
             get {
                 return ResourceManager.GetString("I0001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is reset..
+        /// </summary>
+        internal static string I0002 {
+            get {
+                return ResourceManager.GetString("I0002", resourceCulture);
             }
         }
     }
