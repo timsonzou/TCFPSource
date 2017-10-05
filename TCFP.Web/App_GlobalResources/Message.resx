@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="E0001" xml:space="preserve">
-    <value>Please input a valid email address.</value>
+    <value>Please input a valid {0}.</value>
   </data>
   <data name="E0002" xml:space="preserve">
     <value>Verification error. Please try again.</value>
@@ -144,10 +144,22 @@
   <data name="E0009" xml:space="preserve">
     <value>URL is expired.</value>
   </data>
+  <data name="E0010" xml:space="preserve">
+    <value>Invalid Email or Password.</value>
+  </data>
+  <data name="E0011" xml:space="preserve">
+    <value>Email has been used.</value>
+  </data>
+  <data name="E0012" xml:space="preserve">
+    <value>Email is not registered.</value>
+  </data>
   <data name="I0001" xml:space="preserve">
     <value>An verification email has been send to your email account. Please use the link in the email to activate your account.</value>
   </data>
   <data name="I0002" xml:space="preserve">
     <value>Password is reset.</value>
+  </data>
+  <data name="I0003" xml:space="preserve">
+    <value>An verification email has been send to your email account. Please use the link in the email to reset your password.</value>
   </data>
 </root>

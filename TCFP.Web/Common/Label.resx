@@ -120,10 +120,19 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm Password</value>
   </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+  <data name="ForgetPasswordHeader" xml:space="preserve">
+    <value>Please input your email address.</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
   <data name="ResetPasswordHeader" xml:space="preserve">
     <value>Please input your new password.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome! Please input your email and password to login.</value>
   </data>
 </root>

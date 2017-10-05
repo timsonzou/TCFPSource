@@ -61,7 +61,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please input a valid email address..
+        ///   Looks up a localized string similar to Please input a valid {0}..
         /// </summary>
         internal static string E0001 {
             get {
@@ -142,6 +142,33 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Email or Password..
+        /// </summary>
+        internal static string E0010 {
+            get {
+                return ResourceManager.GetString("E0010", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email has been used..
+        /// </summary>
+        internal static string E0011 {
+            get {
+                return ResourceManager.GetString("E0011", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email is not registered..
+        /// </summary>
+        internal static string E0012 {
+            get {
+                return ResourceManager.GetString("E0012", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An verification email has been send to your email account. Please use the link in the email to activate your account..
         /// </summary>
         internal static string I0001 {
@@ -156,6 +183,15 @@ namespace Resources {
         internal static string I0002 {
             get {
                 return ResourceManager.GetString("I0002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An verification email has been send to your email account. Please use the link in the email to reset your password..
+        /// </summary>
+        internal static string I0003 {
+            get {
+                return ResourceManager.GetString("I0003", resourceCulture);
             }
         }
     }

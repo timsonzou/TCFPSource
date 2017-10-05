@@ -36,8 +36,16 @@
           <Property Name="ParameterValue" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="DataType" Type="nchar" MaxLength="1" Nullable="false" />
         </EntityType>
+        <Function Name="sp_ForgetPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="email" Type="nvarchar" Mode="In" />
+          <Parameter Name="tokenID" Type="nchar" Mode="In" />
+        </Function>
         <Function Name="sp_GetUserToken" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="tokenID" Type="nchar" Mode="In" />
+        </Function>
+        <Function Name="sp_Login" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="email" Type="nvarchar" Mode="In" />
+          <Parameter Name="password" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_RegisterNewClient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="email" Type="nvarchar" Mode="In" />
@@ -73,6 +81,14 @@
             <Parameter Name="password" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="ClientProfiles" EntityType="TCFPModel.ClientProfile" />
+          <FunctionImport Name="sp_Login" ReturnType="Collection(Int32)">
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ForgetPassword" ReturnType="Collection(Int32)">
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="tokenID" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="SystemParameter">
           <Key>
@@ -167,6 +183,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_Login" FunctionName="TCFPModel.Store.sp_Login" />
+          <FunctionImportMapping FunctionImportName="sp_ForgetPassword" FunctionName="TCFPModel.Store.sp_ForgetPassword" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -62,6 +62,8 @@
   <ItemGroup>
     <None Include="sp\sp_RegisterNewClient.sql" />
     <None Include="sp\sp_ResetPassword.sql" />
+    <None Include="sp\sp_Login.sql" />
+    <None Include="sp\sp_ForgetPassword.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sp\sp_GetUserToken.sql" />

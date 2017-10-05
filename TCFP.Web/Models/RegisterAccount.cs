@@ -10,7 +10,7 @@ namespace TCFP.Web.Models
     public class RegisterAccount
     {
         [Required(ErrorMessageResourceType =typeof(Resources.Message),ErrorMessageResourceName ="E0001")]
-        [Display(Name ="Email Address")]
+        [Display(Name ="EmailAddress", ResourceType =typeof(Resources.Label))]
         [EmailAddress(ErrorMessageResourceName = "E0001", ErrorMessageResourceType = typeof(Resources.Message))]
         public string Email { get; set; }
 

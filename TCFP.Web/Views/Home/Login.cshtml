@@ -1,0 +1,48 @@
+﻿@model TCFP.Web.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="table">
+        <div class="row">
+            <h4>@Resources.Label.Welcome</h4>
+            <br />
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @if (@ViewBag.Message != null)
+            {
+                <div class="validation-summary-errors text-info" data-valmsg-summary="true">
+                    <ul>
+                        <li>@ViewBag.Message</li>
+                    </ul>
+                </div>
+            }
+            <div class="row">
+                @Html.LabelFor(m => m.Email, new { @class = "col-3" })
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-5" })
+            </div>
+            <br />
+            <div class="row">
+                @Html.LabelFor(m => m.Password, new { @class = "col-3" })
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control col-5" })
+            </div>
+            <div class="row col-md-3 form-inline">
+                    @Html.ActionLink("Forget Password", "ForgetPassword", "Register", new { @class = "pull-right" })
+            </div>
+            <br />
+            <div class="row col-md-3 form-inline">
+                @Html.ActionLink("New Account", "Index", "Register", new { @class = "pull-right" })
+            </div>
+            <br />
+            <div class="row">
+                <button name="button" value="Login" class=" col-1" type="submit">Login</button>
+            </div>
+        </div>
+
+    </div>
+}
+

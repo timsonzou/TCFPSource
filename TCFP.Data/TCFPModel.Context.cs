@@ -75,5 +75,31 @@ namespace TCFP.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ResetPassword", tokenIDParameter, passwordParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> sp_Login(string email, string password)
+        {
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("password", password) :
+                new ObjectParameter("password", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("sp_Login", emailParameter, passwordParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> sp_ForgetPassword(string email, string tokenID)
+        {
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var tokenIDParameter = tokenID != null ?
+                new ObjectParameter("tokenID", tokenID) :
+                new ObjectParameter("tokenID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("sp_ForgetPassword", emailParameter, tokenIDParameter);
+        }
     }
 }

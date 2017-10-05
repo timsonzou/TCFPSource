@@ -67,8 +67,14 @@ namespace TCFP.Web.Controllers
                             using (var context = new TCFPEntities(conn,false))
                             {
                                 tokenID = Guid.NewGuid().ToString("N");
-                                context.sp_RegisterNewClient(model.Email, model.Name, tokenID);
-                                ViewBag.Message = Resources.Message.I0001;
+                                int r = context.sp_RegisterNewClient(model.Email, model.Name, tokenID);
+                                if (r == 0)
+                                {
+                                    ModelState.AddModelError("E0011", Resources.Message.E0011);
+                                    return View();
+                                }
+                                else
+                                    ViewBag.Message = Resources.Message.I0001;
                             }
                         }
 
@@ -202,6 +208,79 @@ namespace TCFP.Web.Controllers
             }
             else
                 return View();
+        }
+
+        [HttpGet]
+        public ActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgetPassword(Models.ForgetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check the result from Google reCAPTCHA
+                var formContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("secret", ConfigurationManager.AppSettings["reCAPTCHASecretKey"]),
+                    new KeyValuePair<string, string>("response", Request["g-recaptcha-response"])
+                });
+
+                HttpResponseMessage resp;
+                using (var client = new HttpClient())
+                {
+                    resp = await client.PostAsync(
+                        ConfigurationManager.AppSettings["reCAPTCHASiteVerifyURL"],
+                         formContent);
+                }
+
+                var respJSON = JsonConvert.DeserializeObject<JSONResponse>(await resp.Content.ReadAsStringAsync());
+                if (respJSON.success != true)
+                {
+                    ModelState.AddModelError("E0002", Resources.Message.E0002);
+                    return View(model);
+                }
+                else
+                {
+                    string tokenID;
+                    using (var context = new TCFPEntities())
+                    {
+                        tokenID = Guid.NewGuid().ToString("N");
+                        var r = context.sp_ForgetPassword(model.Email, tokenID).SingleOrDefault();
+
+                        if (r!=1)
+                        {
+                            ModelState.AddModelError("E0012", Resources.Message.E0012);
+                            return View();
+                        }
+                        else
+                            ViewBag.Message = Resources.Message.I0003;
+                    }
+
+
+                    // Send Email
+                    using (MailMessage msg = new MailMessage(new MailAddress("no_reply@tcfp.com"), new MailAddress(model.Email)))
+                    {
+                        msg.Subject = Resources.EmailContent.RegisterSubject;
+                        msg.IsBodyHtml = false;
+                        msg.Body = string.Format(Resources.EmailContent.RegisterContent, "Customer", ConfigurationManager.AppSettings["BaseURL"] + "?t=" + tokenID);
+
+                        using (SmtpClient smtp = new SmtpClient(ConfigurationManager.AppSettings["SMTPServer"], int.Parse(ConfigurationManager.AppSettings["SMTPPort"])))
+                        {
+                            smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["SMTPUser"], ConfigurationManager.AppSettings["SMTPPwd"]);
+                            await smtp.SendMailAsync(msg);
+                        }
+                    }
+
+                    return View();
+                }
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

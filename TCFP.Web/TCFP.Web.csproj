@@ -168,6 +168,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ForgetPasswordModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\NewPassword.cs" />
     <Compile Include="Models\RegisterAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -229,6 +231,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\Register\ResetPassword.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Register\ForgetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
